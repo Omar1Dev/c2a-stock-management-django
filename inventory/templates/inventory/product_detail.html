@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>📄 Product Details</h1>
+  <div class="actions">
+    <a href="{% url 'edit_product' product.id %}" class="btn warning">✏️ Edit</a>
+    <a href="{% url 'delete_product' product.id %}" class="btn danger">🗑 Delete</a>
+  </div>
+</div>
+
+<div class="product-card">
+
+  <h2>{{ product.name }}</h2>
+
+  <p class="category">
+    🏷 {{ product.category }}
+  </p>
+
+  {% if product.description %}
+  <p class="description">{{ product.description }}</p>
+  {% endif %}
+
+  <hr>
+
+  <div class="info-grid">
+
+    <div>
+      <strong>Initial Quantity</strong>
+      <p>{{ product.initial_quantity }}</p>
+    </div>
+
+    <div>
+      <strong>Current Quantity</strong>
+      <p>{{ product.current_quantity }}</p>
+    </div>
+
+    <div>
+      <strong>Unit Price</strong>
+      <p>{{ product.unit_price|floatformat:2 }} DT</p>
+    </div>
+
+    <div>
+      <strong>Total Value</strong>
+      <p>{% widthratio product.current_quantity 1 product.unit_price %} DT</p>
+    </div>
+
+    <div>
+      <strong>Status</strong>
+      <p>
+        {% if product.status == "In Stock" %}
+          <span class="badge success">In Stock</span>
+        {% elif product.status == "Low Stock" %}
+          <span class="badge warning">Low Stock</span>
+        {% else %}
+          <span class="badge danger">Out of Stock</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <div>
+      <strong>Last Updated</strong>
+      <p style="font-size:.95rem;font-weight:500;">{{ product.updated_at|date:"N j, Y" }}</p>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="stock-analysis">
+    <h3>📊 Stock Analysis</h3>
+    <p>Low stock threshold: <strong>{{ product.low_stock_threshold }} units</strong> (10% of initial quantity)</p>
+    <p>Added on: <strong>{{ product.created_at|date:"N j, Y" }}</strong></p>
+  </div>
+
+</div>
+
+<div class="back">
+  <a href="{% url 'product_list' %}" class="btn secondary">← Back to Products</a>
+</div>
+
+{% endblock %}

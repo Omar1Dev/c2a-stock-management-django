@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if product %}Edit Product{% else %}Add Product{% endif %}
+{% endblock %}
+
+{% block body_attrs %}data-form-mode="{% if product %}edit{% else %}add{% endif %}"{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>{% if product %}✏️ Edit Product{% else %}➕ Add Product{% endif %}</h1>
+  <a href="{% url 'product_list' %}" class="btn secondary">← Back to Products</a>
+</div>
+
+<div class="form-container">
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="message error" style="margin-bottom:16px;">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Name -->
+    <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+      <label for="{{ form.name.id_for_label }}">Product Name *</label>
+      <input
+        type="text"
+        name="{{ form.name.html_name }}"
+        id="{{ form.name.id_for_label }}"
+        value="{{ form.name.value|default:'' }}"
+        placeholder="{{ form.name.field.widget.attrs.placeholder }}"
+        required
+      >
+      {% if form.name.errors %}
+      <div class="error-text">{{ form.name.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Category -->
+    <div class="form-group {% if form.category.errors %}has-error{% endif %}">
+      <label for="{{ form.category.id_for_label }}">Category *</label>
+      <input
+        type="text"
+        name="{{ form.category.html_name }}"
+        id="{{ form.category.id_for_label }}"
+        value="{{ form.category.value|default:'' }}"
+        placeholder="{{ form.category.field.widget.attrs.placeholder }}"
+        required
+      >
+      {% if form.category.errors %}
+      <div class="error-text">{{ form.category.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Description -->
+    <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+      <label for="{{ form.description.id_for_label }}">Description</label>
+      <textarea
+        name="{{ form.description.html_name }}"
+        id="{{ form.description.id_for_label }}"
+        placeholder="{{ form.description.field.widget.attrs.placeholder }}"
+        rows="3"
+      >{{ form.description.value|default:'' }}</textarea>
+      {% if form.description.errors %}
+      <div class="error-text">{{ form.description.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Quantities -->
+    <div class="form-row">
+
+      <div class="form-group {% if form.initial_quantity.errors %}has-error{% endif %}">
+        <label for="{{ form.initial_quantity.id_for_label }}">Initial Quantity *</label>
+        <input
+          type="number"
+          name="{{ form.initial_quantity.html_name }}"
+          id="{{ form.initial_quantity.id_for_label }}"
+          value="{{ form.initial_quantity.value|default:'' }}"
+          placeholder="0"
+          min="0"
+          required
+          {% if product %}readonly style="background:var(--gray-100);cursor:not-allowed"{% endif %}
+        >
+        {% if product %}
+        <div class="error-text" style="color:var(--gray-500);">Initial quantity cannot be changed after creation.</div>
+        {% endif %}
+        {% if form.initial_quantity.errors %}
+        <div class="error-text">{{ form.initial_quantity.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group {% if form.current_quantity.errors %}has-error{% endif %}">
+        <label for="{{ form.current_quantity.id_for_label }}">Current Quantity *</label>
+        <input
+          type="number"
+          name="{{ form.current_quantity.html_name }}"
+          id="{{ form.current_quantity.id_for_label }}"
+          value="{{ form.current_quantity.value|default:'' }}"
+          placeholder="0"
+          min="0"
+          required
+        >
+        {% if form.current_quantity.errors %}
+        <div class="error-text">{{ form.current_quantity.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Price -->
+    <div class="form-group {% if form.unit_price.errors %}has-error{% endif %}" style="max-width:260px;">
+      <label for="{{ form.unit_price.id_for_label }}">Unit Price (DT) *</label>
+      <input
+        type="number"
+        name="{{ form.unit_price.html_name }}"
+        id="{{ form.unit_price.id_for_label }}"
+        value="{{ form.unit_price.value|default:'' }}"
+        placeholder="0.00"
+        min="0"
+        step="0.01"
+        required
+      >
+      {% if form.unit_price.errors %}
+      <div class="error-text">{{ form.unit_price.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn primary">
+        {% if product %}💾 Save Changes{% else %}✅ Add Product{% endif %}
+      </button>
+      <a href="{% url 'product_list' %}" class="btn secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

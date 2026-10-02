@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>👤 My Profile</h1>
+</div>
+
+<div class="profile-card">
+
+  <div class="profile-field">
+    <span class="label">Full Name</span>
+    <span class="value">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+  </div>
+
+  <div class="profile-field">
+    <span class="label">Username</span>
+    <span class="value">{{ request.user.username }}</span>
+  </div>
+
+  <div class="profile-field">
+    <span class="label">Email</span>
+    <span class="value">{{ request.user.email|default:"—" }}</span>
+  </div>
+
+  <div class="profile-field">
+    <span class="label">Member Since</span>
+    <span class="value">{{ request.user.date_joined|date:"N j, Y" }}</span>
+  </div>
+
+  <div class="profile-field">
+    <span class="label">Last Login</span>
+    <span class="value">{{ request.user.last_login|date:"N j, Y, H:i"|default:"—" }}</span>
+  </div>
+
+  <div class="profile-actions">
+    <a href="{% url 'dashboard' %}" class="btn secondary">← Dashboard</a>
+    <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="btn danger">Logout</button>
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

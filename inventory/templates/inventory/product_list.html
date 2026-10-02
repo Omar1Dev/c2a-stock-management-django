@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>📦 Products</h1>
+  <a href="{% url 'add_product' %}" class="btn primary">➕ Add Product</a>
+</div>
+
+<!-- Search & Filter -->
+<div class="search-box">
+  <form method="GET">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search by name..."
+      value="{{ query }}"
+    >
+    <select name="category">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+      <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>
+        {{ cat }}
+      </option>
+      {% endfor %}
+    </select>
+    <button type="submit">Search</button>
+    {% if query or selected_category %}
+    <a href="{% url 'product_list' %}" class="btn secondary" id="clear-search">Clear</a>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Table -->
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Current Qty</th>
+      <th>Unit Price</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+    <tr>
+      <td>
+        <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+      </td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.current_quantity }}</td>
+      <td>{{ product.unit_price|floatformat:2 }} DT</td>
+      <td>
+        {% if product.status == "In Stock" %}
+          <span class="badge success">In Stock</span>
+        {% elif product.status == "Low Stock" %}
+          <span class="badge warning">Low Stock</span>
+        {% else %}
+          <span class="badge danger">Out of Stock</span>
+        {% endif %}
+      </td>
+      <td class="actions">
+        <a href="{% url 'product_detail' product.id %}" class="btn small secondary">View</a>
+        <a href="{% url 'edit_product' product.id %}" class="btn small warning">Edit</a>
+        <a href="{% url 'delete_product' product.id %}" class="btn small danger">Delete</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6">
+        {% if query or selected_category %}
+          No products match your search. <a href="{% url 'product_list' %}">Clear filters</a>
+        {% else %}
+          No products yet. <a href="{% url 'add_product' %}">Add your first product →</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create Account{% endblock %}
+
+{% block body_attrs %}data-page="auth"{% endblock %}
+
+{% block content %}
+<div class="auth-split">
+
+  <!-- Left panel -->
+  <div class="auth-panel-left">
+    <div class="auth-panel-slides">
+      <div class="auth-slide active" style="background-image: url('{% static 'images/banner2.jpg' %}')"></div>
+      <div class="auth-slide" style="background-image: url('{% static 'images/banner3.jpg' %}')"></div>
+      <div class="auth-slide" style="background-image: url('{% static 'images/banner1.jpg' %}')"></div>
+    </div>
+    <div class="auth-panel-overlay">
+      <img src="{% static 'images/logo.jpg' %}" alt="C2A Logo" class="auth-panel-logo">
+      <p class="auth-panel-tagline">Comptoir Aluminium et Acier<br>Système de Gestion de Stock</p>
+    </div>
+  </div>
+
+  <!-- Right panel: signup form -->
+  <div class="auth-panel-right">
+    <div class="auth-container" style="max-width:480px;">
+
+      <div class="auth-logo">
+        <img src="{% static 'images/logo.jpg' %}" alt="C2A" class="auth-logo-img">
+        <p>Créez votre compte</p>
+      </div>
+
+      <h2>Sign Up</h2>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="message error" style="margin-bottom:16px;">
+          {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-row">
+          <div class="form-group {% if form.first_name.errors %}has-error{% endif %}">
+            <label>First Name</label>
+            <input type="text" name="first_name" value="{{ form.first_name.value|default:'' }}" placeholder="John" required>
+            {% if form.first_name.errors %}<div class="error-text">{{ form.first_name.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group {% if form.last_name.errors %}has-error{% endif %}">
+            <label>Last Name</label>
+            <input type="text" name="last_name" value="{{ form.last_name.value|default:'' }}" placeholder="Doe" required>
+            {% if form.last_name.errors %}<div class="error-text">{{ form.last_name.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
+
+        <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+          <label>Username</label>
+          <input type="text" name="username" value="{{ form.username.value|default:'' }}" placeholder="johndoe" autocomplete="username" required>
+          {% if form.username.errors %}<div class="error-text">{{ form.username.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+          <label>Email Address</label>
+          <input type="email" name="email" value="{{ form.email.value|default:'' }}" placeholder="john@example.com" required>
+          {% if form.email.errors %}<div class="error-text">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group {% if form.password1.errors %}has-error{% endif %}">
+            <label>Password</label>
+            <input type="password" name="password1" placeholder="Create password" autocomplete="new-password" required>
+            {% if form.password1.errors %}<div class="error-text">{{ form.password1.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group {% if form.password2.errors %}has-error{% endif %}">
+            <label>Confirm Password</label>
+            <input type="password" name="password2" placeholder="Repeat password" autocomplete="new-password" required>
+            {% if form.password2.errors %}<div class="error-text">{{ form.password2.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
+
+        <div class="form-actions" style="margin-top:20px; border:none; padding:0;">
+          <button type="submit" class="btn primary" style="width:100%; justify-content:center;">
+            Create Account
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

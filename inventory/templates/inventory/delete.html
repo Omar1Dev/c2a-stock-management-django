@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Delete Product{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>⚠️ Delete Product</h1>
+</div>
+
+<div class="delete-container">
+
+  <div class="warning-box">
+    <h2>Are you sure?</h2>
+    <p>You are about to permanently delete:</p>
+    <h3 class="product-name">{{ product.name }}</h3>
+    <p class="warning-text">This action cannot be undone.</p>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-actions" style="border:none; padding:0; margin:0;">
+      <button type="submit" class="btn danger">🗑 Yes, Delete</button>
+      <a href="{% url 'product_list' %}" class="btn secondary">Cancel</a>
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}
